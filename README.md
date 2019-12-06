@@ -61,7 +61,7 @@ Having ``currentRoundStartBlock``, the Rounds are calculated and adjusted to cor
 ``blocksPerRound  = 6000 x 7 = 42000`` (at the time of writing)
 Function ``setBlocksPerRound(blocksPerRound)``to adjust ``blocksPerRound`` by the Contract owner or Round admin.
 If performing token issue, transfer or claim, the ``currentRound`` is updated based on ``currentBlock``, ``blocksPerRound`` and ``currentRoundStartBlock``, if needed.
-
+ 
 ``currentRound = currentRound + (currentBlock - currentRoundStartBlock) / blocksPerRound``
 
 When updating the ``currentRound``, ``currentRoundStartBlock`` is updated accordingly.
