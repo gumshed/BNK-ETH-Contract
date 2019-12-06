@@ -1,6 +1,6 @@
 const assertJump = require('./helpers/assertJump');
 var contractHelper = require('./helpers/contractHelper');
-var BankeraToken = artifacts.require("./BankeraToken.sol");
+var MovementToken = artifacts.require("./MovementToken.sol");
 var BigNumber = require('decimal.js');
 BigNumber.config({
     precision: 30,
@@ -9,7 +9,7 @@ BigNumber.config({
     toExpPos: 30
 });
 
-contract('BankeraToken mixed tests', function (accounts) {
+contract('MovementToken mixed tests', function (accounts) {
 
     beforeEach(function(done) {
         this.timeout(3000); // A very long environment setup.
@@ -21,26 +21,26 @@ contract('BankeraToken mixed tests', function (accounts) {
     var startingRoundNumber = BigNumber(0);
 
     it("1. " + "Correct total supply", function() {
-        var bankeraTokenInstance;
+        var movementTokenInstance;
         var contractOwner;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-            bankeraTokenInstance = instance;
+        return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+            movementTokenInstance = instance;
             contractOwner = accounts[0];
-            return bankeraTokenInstance.balanceOf.call(contractOwner);
+            return movementTokenInstance.balanceOf.call(contractOwner);
         }).then(function (balance) {
             assert.equal(balance.toFixed(0), 0, "Contract Owner balance should be zero");
-            return bankeraTokenInstance.totalSupply()
+            return movementTokenInstance.totalSupply()
         }).then(function (totalSupply) {
             assert.equal(totalSupply.toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
-            return bankeraTokenInstance.currentRound.call()
+            return movementTokenInstance.currentRound.call()
         }).then(function (currentRound) {
             assert.equal(currentRound.toFixed(0), 0, "currentRound should be 0");
         })
     });
 
     it("2. " + "Issue tokens with IssueManager", function() {
-        var bankeraTokenInstance;
+        var movementTokenInstance;
         var contractOwner;
 
         var contributorAddress1 = accounts[3];
@@ -48,44 +48,44 @@ contract('BankeraToken mixed tests', function (accounts) {
 
         var issueManager = accounts[5];
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-            bankeraTokenInstance = instance;
+        return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+            movementTokenInstance = instance;
             contractOwner = accounts[0];
-            return bankeraTokenInstance.balanceOf.call(contractOwner);
+            return movementTokenInstance.balanceOf.call(contractOwner);
         }).then(function (balance) {
             assert.equal(balance.toFixed(0), 0, "Contract Owner balance should be zero");
-            return bankeraTokenInstance.totalSupply()
+            return movementTokenInstance.totalSupply()
         }).then(function (totalSupply) {
             assert.equal(totalSupply.toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
 
-            return bankeraTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwner});
+            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwner});
         }).catch(function(tx) {
             console.log("tx sendTransaction2 ", tx);
             assert.fail("Unexpected error");
         }).then(function (tx) {
 
-            return bankeraTokenInstance.balanceOf.call(contributorAddress1);
+            return movementTokenInstance.balanceOf.call(contributorAddress1);
         }).then(function (balance) {
             assert.equal(balance.toFixed(0), contributorAddress1sBNKAmount.toFixed(0), "Incorrect contributorAddress1 balance");
 
-            return bankeraTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: issueManager});
+            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: issueManager});
         }).then(function (tx) {
             console.log(tx);
             assert.fail("Unexpected error");
         }).catch(function(tx) {
             assertJump(tx);
 
-            return bankeraTokenInstance.balanceOf.call(contributorAddress1);
+            return movementTokenInstance.balanceOf.call(contributorAddress1);
         }).then(function (balance) {
             assert.equal(balance.toFixed(0), contributorAddress1sBNKAmount.toFixed(0), "Incorrect contributorAddress1 balance");
 
-            return bankeraTokenInstance.changeIssueManager(issueManager, {from: contractOwner});
+            return movementTokenInstance.changeIssueManager(issueManager, {from: contractOwner});
         }).then(function (tx) {
 
-            return bankeraTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: issueManager});
+            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: issueManager});
         }).then(function (tx) {
 
-            return bankeraTokenInstance.balanceOf.call(contributorAddress1);
+            return movementTokenInstance.balanceOf.call(contributorAddress1);
         }).then(function (balance) {
             assert.equal(balance.toFixed(0), contributorAddress1sBNKAmount.mul(2).toFixed(0), "Incorrect contributorAddress1 balance");
         })
@@ -93,25 +93,25 @@ contract('BankeraToken mixed tests', function (accounts) {
     });
 
     it("3. " + "Big number of rounds creation", function() {
-        var bankeraTokenInstance;
+        var movementTokenInstance;
         var contractOwner;
         var bigNumberOfRounds = 280;
 
         var contributorAddress1 = accounts[3];
         var contributorAddress1sBNKAmount = BigNumber('1721541201');
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-            bankeraTokenInstance = instance;
+        return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+            movementTokenInstance = instance;
             contractOwner = accounts[0];
-            return bankeraTokenInstance.balanceOf.call(contractOwner);
+            return movementTokenInstance.balanceOf.call(contractOwner);
         }).then(function (balance) {
             assert.equal(balance.toFixed(0), 0, "Contract Owner balance should be zero");
-            return bankeraTokenInstance.totalSupply()
+            return movementTokenInstance.totalSupply()
         }).then(function (totalSupply) {
             assert.equal(totalSupply.toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
             return Promise.all([
-                bankeraTokenInstance.currentRound.call(),
-                bankeraTokenInstance.blocksPerRound.call()
+                movementTokenInstance.currentRound.call(),
+                movementTokenInstance.blocksPerRound.call()
             ])
         }).then(function (values) {
             assert.equal(values[0].toFixed(0), 0, "currentRound should be 0");
@@ -119,15 +119,15 @@ contract('BankeraToken mixed tests', function (accounts) {
             return contractHelper.mineNewBlocks(newBlocks.toFixed(0));
         }).then(function (tx) {
 
-            return bankeraTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwner});
+            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwner});
         })
         .then(function (tx) {
-            return bankeraTokenInstance.currentRound.call()
+            return movementTokenInstance.currentRound.call()
         })
         .then(function (currentRound) {
             assert.equal(currentRound.toFixed(0), bigNumberOfRounds, "currentRound should be " + bigNumberOfRounds);
 
-            return bankeraTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwner});
+            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwner});
         })
         .catch(function(error) {
             console.log(error);
@@ -136,32 +136,32 @@ contract('BankeraToken mixed tests', function (accounts) {
     });
 
     it("4. " + "Change Contract Owner validation", function () {
-        var bankeraTokenInstance;
+        var movementTokenInstance;
         var newContractOwnerAddress = accounts[3];
         var contractOwner;
         //for contract owner checking we use setBlocksPerRound function
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance){
-                bankeraTokenInstance = instance;
+                movementTokenInstance = instance;
                 contractOwner = accounts[0];
-                return bankeraTokenInstance.setBlocksPerRound(123123)
+                return movementTokenInstance.setBlocksPerRound(123123)
             .then(function () {
-                return bankeraTokenInstance.changeContractOwner(newContractOwnerAddress);
+                return movementTokenInstance.changeContractOwner(newContractOwnerAddress);
             }).catch(function(error) {
                 assert.isOk(false, 'Unexpected exception');
             }).then(function(){
-                return bankeraTokenInstance.setBlocksPerRound(3332222)
+                return movementTokenInstance.setBlocksPerRound(3332222)
             }).then(function () {
                 assert.isOk(false, 'Unexpected exception');
             }).catch(function(error) {
                 assertJump(error);
                 //need to change contract owner to old owner, for other tests
-                return bankeraTokenInstance.changeContractOwner(contractOwner);
+                return movementTokenInstance.changeContractOwner(contractOwner);
             }).then(function () {
                 assert.isOk(false, 'Unexpected exception');
             }).catch(function(error) {
                 assertJump(error);
-                return bankeraTokenInstance.changeContractOwner(contractOwner, {from: newContractOwnerAddress});
+                return movementTokenInstance.changeContractOwner(contractOwner, {from: newContractOwnerAddress});
             }).catch(function(error) {
                 console.log(error);
                 assert.isOk(false, 'Unexpected exception');
@@ -178,7 +178,7 @@ contract('BankeraToken mixed tests', function (accounts) {
         var contractOwnerAddress = accounts[0];
         var tokenManagerBalanceBefore = BigNumber(web3.eth.getBalance(contractOwnerAddress).toString());
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractAddress = instance.address;
@@ -222,7 +222,7 @@ contract('BankeraToken mixed tests', function (accounts) {
         var contributorAddressAmount = BigNumber('125412542545499');
         var bnkTransferAmount;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractAddress = instance.address;
@@ -286,7 +286,7 @@ contract('BankeraToken mixed tests', function (accounts) {
         var contributorAddress5DepositAmount = BigNumber('5448454879999');
         var contributorAddress6BNKAmount = 0;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractAddress = instance.address;
@@ -530,25 +530,25 @@ contract('BankeraToken mixed tests', function (accounts) {
     });
 
     it("8. " + "createRounds function accessibility for all users", function() {
-        var bankeraTokenInstance;
+        var movementTokenInstance;
         var contractOwner;
         var customBlocksPerRound = 1;
 
-        return BankeraToken.new(customBlocksPerRound, startingRoundNumber).then(function (instance) {
-            bankeraTokenInstance = instance;
+        return MovementToken.new(customBlocksPerRound, startingRoundNumber).then(function (instance) {
+            movementTokenInstance = instance;
             contractOwner = accounts[0];
 
             return Promise.all([
-                bankeraTokenInstance.changeRewardManager(accounts[1], {from: contractOwner}),
-                bankeraTokenInstance.changeIssueManager(accounts[2], {from: contractOwner}),
-                bankeraTokenInstance.changeRoundManager(accounts[3], {from: contractOwner}),
-                bankeraTokenInstance.createRounds(2, {from: accounts[6]})
+                movementTokenInstance.changeRewardManager(accounts[1], {from: contractOwner}),
+                movementTokenInstance.changeIssueManager(accounts[2], {from: contractOwner}),
+                movementTokenInstance.changeRoundManager(accounts[3], {from: contractOwner}),
+                movementTokenInstance.createRounds(2, {from: accounts[6]})
             ]).then(function(values) {
                 return Promise.all([
-                    bankeraTokenInstance.createRounds(2, {from: contractOwner}),
-                    bankeraTokenInstance.createRounds(2, {from: accounts[1]}),
-                    bankeraTokenInstance.createRounds(2, {from: accounts[2]}),
-                    bankeraTokenInstance.createRounds(2, {from: accounts[3]})
+                    movementTokenInstance.createRounds(2, {from: contractOwner}),
+                    movementTokenInstance.createRounds(2, {from: accounts[1]}),
+                    movementTokenInstance.createRounds(2, {from: accounts[2]}),
+                    movementTokenInstance.createRounds(2, {from: accounts[3]})
                 ])
             }).catch(function(tx) {
                 console.log("tx ", tx);
@@ -558,18 +558,18 @@ contract('BankeraToken mixed tests', function (accounts) {
     });
 
     it("9. " + "transferFrom function revert all transactions", function() {
-        var bankeraTokenInstance;
+        var movementTokenInstance;
         var contractOwner;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-            bankeraTokenInstance = instance;
+        return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+            movementTokenInstance = instance;
             contractOwner = accounts[0];
 
             return Promise.all([
-                bankeraTokenInstance.issueTokens(accounts[1], BigNumber('321540001').toFixed(0), {from: contractOwner})
+                movementTokenInstance.issueTokens(accounts[1], BigNumber('321540001').toFixed(0), {from: contractOwner})
             ]).then(function(values) {
                 return Promise.all([
-                    bankeraTokenInstance.transferFrom(accounts[1], accounts[2], BigNumber('321540001').toFixed(0))
+                    movementTokenInstance.transferFrom(accounts[1], accounts[2], BigNumber('321540001').toFixed(0))
                 ])
             }).then(function(values) {
                 assert.fail("Transaction should be reverted");

@@ -13,6 +13,7 @@ contract ERC20DemoCallBack is StandardToken {
 		balances[owner] = totalSupply;
 	}
 
+
 	function tokenFallback(address /*_from*/, uint256 /*_value*/, bytes /*_data*/) public {
 
 	}

@@ -41,6 +41,7 @@ contract BasicToken is ERC20Basic, SafeMath {
 		return true;
 	}
 
+
 	/**
 	* @dev Gets the balance of the specified address.
 	* @param _owner The address to query the the balance of.

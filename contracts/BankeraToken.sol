@@ -32,13 +32,13 @@ contract ERC223 is ERC20 {
 	event Transfer(address indexed _from, address indexed _to, uint256 _value, bytes _data);
 }
 
-contract BankeraToken is ERC223, SafeMath {
+contract MovementToken is ERC223, SafeMath {
 
-	string public constant name = "Banker Token";     // Set the name for display purposes
-	string public constant symbol = "BNK";      // Set the symbol for display purposes
+	string public constant name = "Movement Token";     // Set the name for display purposes
+	string public constant symbol = "MVT";      // Set the symbol for display purposes
 	uint8 public constant decimals = 8;         // Amount of decimals for display purposes
 	uint256 private issued = 0;   				// tokens count issued to addresses
-	uint256 private totalTokens = 25000000000 * 100000000; //25,000,000,000.0000 0000 BNK
+	uint256 private totalTokens = 3000000 * 100000000; //3,000.000.0000 0000 MVT
 
 	address private contractOwner;
 	address private rewardManager;
@@ -59,7 +59,7 @@ contract BankeraToken is ERC223, SafeMath {
 	struct Reward {
 		uint64 roundNumber;
 		uint256 rewardInWei;
-		uint256 rewardRate; //reward rate in wei. 1 sBNK - xxx wei
+		uint256 rewardRate; //reward rate in wei. 1 sMVT - xxx wei
 		bool isConfigured;
 	}
 
@@ -73,7 +73,7 @@ contract BankeraToken is ERC223, SafeMath {
 	}
 
 	/* Initializes contract with initial blocks per round number*/
-	function BankeraToken(uint256 _blocksPerRound, uint64 _round) public {
+	function MovementToken(uint256 _blocksPerRound, uint64 _round) public {
 		contractOwner = msg.sender;
 		lastBlockNumberInRound = block.number;
 

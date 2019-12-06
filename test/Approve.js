@@ -1,5 +1,5 @@
 const assertJump = require('./helpers/assertJump');
-var BankeraToken = artifacts.require("./BankeraToken.sol");
+var MovementToken = artifacts.require("./MovementToken.sol");
 var BigNumber = require('decimal.js');
 BigNumber.config({
     precision: 30,
@@ -8,7 +8,7 @@ BigNumber.config({
     toExpPos: 30
 });
 
-contract('Approve BankeraToken tests', function (accounts) {
+contract('Approve MovementToken tests', function (accounts) {
 
     var blocksPerRound = 15;
     var startingRoundNumber = BigNumber(0);
@@ -19,7 +19,7 @@ contract('Approve BankeraToken tests', function (accounts) {
 
         describe('when the spender is not the zero address', function () {
             const spender = recipient;
-            var bankeraTokenInstance;
+            var movementTokenInstance;
             var contractOwner;
 
             describe('when the sender has enough balance', function () {
@@ -27,11 +27,11 @@ contract('Approve BankeraToken tests', function (accounts) {
 
                 it('emits an approval event', function () {
 
-                    return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                        bankeraTokenInstance = instance;
+                    return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                        movementTokenInstance = instance;
                         contractOwner = accounts[0];
                         return Promise.all([
-                            bankeraTokenInstance.approve(spender, amount, { from: contractOwner })
+                            movementTokenInstance.approve(spender, amount, { from: contractOwner })
                         ]).then(function(tx) {
                             var logs = tx[0].logs;
 
@@ -47,14 +47,14 @@ contract('Approve BankeraToken tests', function (accounts) {
                 describe('when there was no approved amount before', function () {
                     it('approves the requested amount', function () {
 
-                        return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                            bankeraTokenInstance = instance;
+                        return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                            movementTokenInstance = instance;
                             contractOwner = accounts[0];
                             return Promise.all([
-                                bankeraTokenInstance.approve(spender, amount, { from: contractOwner })
+                                movementTokenInstance.approve(spender, amount, { from: contractOwner })
                             ]).then(function(values) {
                                 return Promise.all([
-                                    bankeraTokenInstance.allowance(contractOwner, spender)
+                                    movementTokenInstance.allowance(contractOwner, spender)
                                 ])
                             }).then(function(allowance) {
                                 assert.equal(allowance, amount);
@@ -65,15 +65,15 @@ contract('Approve BankeraToken tests', function (accounts) {
 
                 describe('when the spender had an approved amount', function () {
                     beforeEach(function () {
-                        return Promise.all([bankeraTokenInstance.approve(spender, 1, { from: contractOwner })]);
+                        return Promise.all([movementTokenInstance.approve(spender, 1, { from: contractOwner })]);
                     });
 
                     it('approves the requested amount and replaces the previous one', function () {
                         return Promise.all([
-                            bankeraTokenInstance.approve(spender, amount, { from: contractOwner })
+                            movementTokenInstance.approve(spender, amount, { from: contractOwner })
                         ]).then(function(values) {
                             return Promise.all([
-                                bankeraTokenInstance.allowance(contractOwner, spender)
+                                movementTokenInstance.allowance(contractOwner, spender)
                             ])
                         }).then(function(allowance) {
                             assert.equal(allowance, amount);
@@ -87,11 +87,11 @@ contract('Approve BankeraToken tests', function (accounts) {
 
                 it('emits an approval event', function () {
 
-                    return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                        bankeraTokenInstance = instance;
+                    return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                        movementTokenInstance = instance;
                         contractOwner = accounts[0];
                         return Promise.all([
-                            bankeraTokenInstance.approve(spender, amount, { from: contractOwner })
+                            movementTokenInstance.approve(spender, amount, { from: contractOwner })
                         ]).then(function(tx) {
                             var logs = tx[0].logs;
 
@@ -107,14 +107,14 @@ contract('Approve BankeraToken tests', function (accounts) {
                 describe('when there was no approved amount before', function () {
                     it('approves the requested amount', function () {
 
-                        return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                            bankeraTokenInstance = instance;
+                        return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                            movementTokenInstance = instance;
                             contractOwner = accounts[0];
                             return Promise.all([
-                                bankeraTokenInstance.approve(spender, amount, { from: contractOwner })
+                                movementTokenInstance.approve(spender, amount, { from: contractOwner })
                             ]).then(function(values) {
                                 return Promise.all([
-                                    bankeraTokenInstance.allowance(contractOwner, spender)
+                                    movementTokenInstance.allowance(contractOwner, spender)
                                 ])
                             }).then(function(allowance) {
                                 assert.equal(allowance, amount);
@@ -125,19 +125,19 @@ contract('Approve BankeraToken tests', function (accounts) {
 
                 describe('when the spender had an approved amount', function () {
                     beforeEach(function () {
-                        return Promise.all([bankeraTokenInstance.approve(spender, 1, { from: contractOwner })]);
+                        return Promise.all([movementTokenInstance.approve(spender, 1, { from: contractOwner })]);
                     });
 
                     it('approves the requested amount and replaces the previous one', function () {
 
-                        return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                            bankeraTokenInstance = instance;
+                        return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                            movementTokenInstance = instance;
                             contractOwner = accounts[0];
                             return Promise.all([
-                                bankeraTokenInstance.approve(spender, amount, { from: contractOwner })
+                                movementTokenInstance.approve(spender, amount, { from: contractOwner })
                             ]).then(function(values) {
                                 return Promise.all([
-                                    bankeraTokenInstance.allowance(contractOwner, spender)
+                                    movementTokenInstance.allowance(contractOwner, spender)
                                 ])
                             }).then(function(allowance) {
                                 assert.equal(allowance, amount);
@@ -154,14 +154,14 @@ contract('Approve BankeraToken tests', function (accounts) {
 
             it('approves the requested amount', function () {
 
-                return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                    bankeraTokenInstance = instance;
+                return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                    movementTokenInstance = instance;
                     contractOwner = accounts[0];
                     return Promise.all([
-                        bankeraTokenInstance.approve(spender, amount, { from: contractOwner })
+                        movementTokenInstance.approve(spender, amount, { from: contractOwner })
                     ]).then(function(values) {
                         return Promise.all([
-                            bankeraTokenInstance.allowance(contractOwner, spender)
+                            movementTokenInstance.allowance(contractOwner, spender)
                         ])
                     }).then(function(allowance) {
                         assert.equal(allowance, amount);
@@ -171,11 +171,11 @@ contract('Approve BankeraToken tests', function (accounts) {
 
             it('emits an approval event', function () {
 
-                return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                    bankeraTokenInstance = instance;
+                return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                    movementTokenInstance = instance;
                     contractOwner = accounts[0];
                     return Promise.all([
-                        bankeraTokenInstance.approve(spender, amount, { from: contractOwner })
+                        movementTokenInstance.approve(spender, amount, { from: contractOwner })
                     ]).then(function(tx) {
                         var logs = tx[0].logs;
 
@@ -192,7 +192,7 @@ contract('Approve BankeraToken tests', function (accounts) {
 
     describe('Increase approval function', function () {
 
-        var bankeraTokenInstance;
+        var movementTokenInstance;
         var contractOwner;
         var anotherAccount = accounts[12];
         const amount = 100;
@@ -203,11 +203,11 @@ contract('Approve BankeraToken tests', function (accounts) {
             describe('when the sender has enough balance', function () {
 
                 it('emits an approval event', function () {
-                    return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                        bankeraTokenInstance = instance;
+                    return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                        movementTokenInstance = instance;
                         contractOwner = accounts[0];
                         return Promise.all([
-                            bankeraTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
+                            movementTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
                         ]).then(function(tx) {
                             var logs = tx[0].logs;
 
@@ -223,14 +223,14 @@ contract('Approve BankeraToken tests', function (accounts) {
                 describe('when there was no approved amount before', function () {
 
                     it('approves the requested amount', function () {
-                        return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                            bankeraTokenInstance = instance;
+                        return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                            movementTokenInstance = instance;
                             contractOwner = accounts[0];
                             return Promise.all([
-                                bankeraTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
+                                movementTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
                             ]).then(function(values) {
                                 return Promise.all([
-                                    bankeraTokenInstance.allowance(contractOwner, spender)
+                                    movementTokenInstance.allowance(contractOwner, spender)
                                 ])
                             }).then(function(allowance) {
                                 assert.equal(allowance, amount);
@@ -241,15 +241,15 @@ contract('Approve BankeraToken tests', function (accounts) {
 
                 describe('when the spender had an approved amount', function () {
                     beforeEach(function () {
-                        return Promise.all([bankeraTokenInstance.approve(spender, 1, { from: contractOwner })]);
+                        return Promise.all([movementTokenInstance.approve(spender, 1, { from: contractOwner })]);
                     });
 
                     it('increases the spender allowance adding the requested amount', function () {
                         return Promise.all([
-                            bankeraTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
+                            movementTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
                         ]).then(function(values) {
                             return Promise.all([
-                                bankeraTokenInstance.allowance(contractOwner, spender)
+                                movementTokenInstance.allowance(contractOwner, spender)
                             ])
                         }).then(function(allowance) {
                             assert.equal(allowance, amount + 1);
@@ -262,11 +262,11 @@ contract('Approve BankeraToken tests', function (accounts) {
                 const amount = 101;
 
                 it('emits an approval event', function () {
-                    return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                        bankeraTokenInstance = instance;
+                    return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                        movementTokenInstance = instance;
                         contractOwner = accounts[0];
                         return Promise.all([
-                            bankeraTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
+                            movementTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
                         ]).then(function(tx) {
                             var logs = tx[0].logs;
 
@@ -281,14 +281,14 @@ contract('Approve BankeraToken tests', function (accounts) {
 
                 describe('when there was no approved amount before', function () {
                     it('approves the requested amount', function () {
-                        return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                            bankeraTokenInstance = instance;
+                        return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                            movementTokenInstance = instance;
                             contractOwner = accounts[0];
                             return Promise.all([
-                                bankeraTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
+                                movementTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
                             ]).then(function(values) {
                                 return Promise.all([
-                                    bankeraTokenInstance.allowance(contractOwner, spender)
+                                    movementTokenInstance.allowance(contractOwner, spender)
                                 ])
                             }).then(function(allowance) {
                                 assert.equal(allowance, amount);
@@ -299,15 +299,15 @@ contract('Approve BankeraToken tests', function (accounts) {
 
                 describe('when the spender had an approved amount', function () {
                     beforeEach( function () {
-                        bankeraTokenInstance.approve(spender, 1, { from: contractOwner });
+                        movementTokenInstance.approve(spender, 1, { from: contractOwner });
                     });
 
                     it('increases the spender allowance adding the requested amount', function () {
                         return Promise.all([
-                            bankeraTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
+                            movementTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
                         ]).then(function(tx) {
                             return Promise.all([
-                                bankeraTokenInstance.allowance(contractOwner, spender)
+                                movementTokenInstance.allowance(contractOwner, spender)
                             ])
                         }).then(function(allowance) {
                             assert.equal(allowance, amount + 1);
@@ -321,14 +321,14 @@ contract('Approve BankeraToken tests', function (accounts) {
             const spender = ZERO_ADDRESS;
 
             it('approves the requested amount', function () {
-                return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                    bankeraTokenInstance = instance;
+                return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                    movementTokenInstance = instance;
                     contractOwner = accounts[0];
                     return Promise.all([
-                        bankeraTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
+                        movementTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
                     ]).then(function(values) {
                         return Promise.all([
-                            bankeraTokenInstance.allowance(contractOwner, spender)
+                            movementTokenInstance.allowance(contractOwner, spender)
                         ])
                     }).then(function(allowance) {
                         assert.equal(allowance, amount);
@@ -337,11 +337,11 @@ contract('Approve BankeraToken tests', function (accounts) {
             });
 
             it('emits an approval event', function () {
-                return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                    bankeraTokenInstance = instance;
+                return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                    movementTokenInstance = instance;
                     contractOwner = accounts[0];
                     return Promise.all([
-                        bankeraTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
+                        movementTokenInstance.increaseApproval(spender, amount, { from: contractOwner })
                     ]).then(function(tx) {
                         var logs = tx[0].logs;
 
@@ -360,7 +360,7 @@ contract('Approve BankeraToken tests', function (accounts) {
     describe('Decrease approval function', function () {
 
         var recipient = accounts[13];
-        var bankeraTokenInstance;
+        var movementTokenInstance;
         var contractOwner;
 
         describe('when the spender is not the zero address', function () {
@@ -370,11 +370,11 @@ contract('Approve BankeraToken tests', function (accounts) {
                 const amount = 100;
 
                 it('emits an approval event', function () {
-                    return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                        bankeraTokenInstance = instance;
+                    return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                        movementTokenInstance = instance;
                         contractOwner = accounts[0];
                         return Promise.all([
-                            bankeraTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
+                            movementTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
                         ]).then(function(tx) {
                             var logs = tx[0].logs;
 
@@ -390,14 +390,14 @@ contract('Approve BankeraToken tests', function (accounts) {
                 describe('when there was no approved amount before', function () {
 
                     it('keeps the allowance to zero', function () {
-                        return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                            bankeraTokenInstance = instance;
+                        return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                            movementTokenInstance = instance;
                             contractOwner = accounts[0];
                             return Promise.all([
-                                bankeraTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
+                                movementTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
                             ]).then(function(values) {
                                 return Promise.all([
-                                    bankeraTokenInstance.allowance(contractOwner, spender)
+                                    movementTokenInstance.allowance(contractOwner, spender)
                                 ])
                             }).then(function(allowance) {
                                 assert.equal(allowance, 0);
@@ -409,15 +409,15 @@ contract('Approve BankeraToken tests', function (accounts) {
                 describe('when the spender had an approved amount', function () {
 
                     beforeEach(function () {
-                        return Promise.all([bankeraTokenInstance.approve(spender, amount + 1, { from: contractOwner })]);
+                        return Promise.all([movementTokenInstance.approve(spender, amount + 1, { from: contractOwner })]);
                     });
 
                     it('decreases the spender allowance subtracting the requested amount', function () {
                         return Promise.all([
-                            bankeraTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
+                            movementTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
                         ]).then(function(values) {
                             return Promise.all([
-                                bankeraTokenInstance.allowance(contractOwner, spender)
+                                movementTokenInstance.allowance(contractOwner, spender)
                             ])
                         }).then(function(allowance) {
                             assert.equal(allowance, 1);
@@ -430,11 +430,11 @@ contract('Approve BankeraToken tests', function (accounts) {
                 const amount = 101;
 
                 it('emits an approval event', function () {
-                    return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                        bankeraTokenInstance = instance;
+                    return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                        movementTokenInstance = instance;
                         contractOwner = accounts[0];
                         return Promise.all([
-                            bankeraTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
+                            movementTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
                         ]).then(function(tx) {
                             var logs = tx[0].logs;
 
@@ -449,14 +449,14 @@ contract('Approve BankeraToken tests', function (accounts) {
 
                 describe('when there was no approved amount before', function () {
                     it('keeps the allowance to zero', function () {
-                        return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                            bankeraTokenInstance = instance;
+                        return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                            movementTokenInstance = instance;
                             contractOwner = accounts[0];
                             return Promise.all([
-                                bankeraTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
+                                movementTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
                             ]).then(function(values) {
                                 return Promise.all([
-                                    bankeraTokenInstance.allowance(contractOwner, spender)
+                                    movementTokenInstance.allowance(contractOwner, spender)
                                 ])
                             }).then(function(allowance) {
                                 assert.equal(allowance, 0);
@@ -467,15 +467,15 @@ contract('Approve BankeraToken tests', function (accounts) {
 
                 describe('when the spender had an approved amount', function () {
                     beforeEach(function () {
-                        return Promise.all([bankeraTokenInstance.approve(spender, amount + 1, { from: contractOwner })]);
+                        return Promise.all([movementTokenInstance.approve(spender, amount + 1, { from: contractOwner })]);
                     });
 
                     it('decreases the spender allowance subtracting the requested amount', function () {
                         return Promise.all([
-                            bankeraTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
+                            movementTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
                         ]).then(function(values) {
                             return Promise.all([
-                                bankeraTokenInstance.allowance(contractOwner, spender)
+                                movementTokenInstance.allowance(contractOwner, spender)
                             ])
                         }).then(function(allowance) {
                             assert.equal(allowance, 1);
@@ -490,14 +490,14 @@ contract('Approve BankeraToken tests', function (accounts) {
             const spender = ZERO_ADDRESS;
 
             it('decreases the requested amount', function () {
-                return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                    bankeraTokenInstance = instance;
+                return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                    movementTokenInstance = instance;
                     contractOwner = accounts[0];
                     return Promise.all([
-                        bankeraTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
+                        movementTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
                     ]).then(function(values) {
                         return Promise.all([
-                            bankeraTokenInstance.allowance(contractOwner, spender)
+                            movementTokenInstance.allowance(contractOwner, spender)
                         ])
                     }).then(function(allowance) {
                         assert.equal(allowance, 0);
@@ -506,11 +506,11 @@ contract('Approve BankeraToken tests', function (accounts) {
             });
 
             it('emits an approval event', function () {
-                return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                    bankeraTokenInstance = instance;
+                return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                    movementTokenInstance = instance;
                     contractOwner = accounts[0];
                     return Promise.all([
-                        bankeraTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
+                        movementTokenInstance.decreaseApproval(spender, amount, { from: contractOwner })
                     ]).then(function(tx) {
                         var logs = tx[0].logs;
 
@@ -528,12 +528,12 @@ contract('Approve BankeraToken tests', function (accounts) {
     describe('transfer from function', function () {
         const spender = recipient;
         const owner = accounts[11];
-        var bankeraTokenInstance;
+        var movementTokenInstance;
         var contractOwner;
 
         beforeEach(function () {
-            return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                bankeraTokenInstance = instance;
+            return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                movementTokenInstance = instance;
                 contractOwner = accounts[0];
             });
         });
@@ -544,8 +544,8 @@ contract('Approve BankeraToken tests', function (accounts) {
             describe('when the spender has enough approved balance', function () {
                 beforeEach(function () {
                     return Promise.all([
-                        bankeraTokenInstance.approve(spender, 100, { from: owner }),
-                        bankeraTokenInstance.issueTokens(owner, 100, {from: contractOwner})
+                        movementTokenInstance.approve(spender, 100, { from: owner }),
+                        movementTokenInstance.issueTokens(owner, 100, {from: contractOwner})
                     ]);
                 });
 
@@ -554,11 +554,11 @@ contract('Approve BankeraToken tests', function (accounts) {
 
                     it('transfers the requested amount', function () {
                         return Promise.all([
-                            bankeraTokenInstance.transferFrom(owner, to, amount, { from: spender })
+                            movementTokenInstance.transferFrom(owner, to, amount, { from: spender })
                         ]).then(function(tx) {
                             return Promise.all([
-                                bankeraTokenInstance.balanceOf(owner),
-                                bankeraTokenInstance.balanceOf(to)
+                                movementTokenInstance.balanceOf(owner),
+                                movementTokenInstance.balanceOf(to)
                             ])
                         }).then(function(values) {
                             assert.equal(values[0], 0);
@@ -569,10 +569,10 @@ contract('Approve BankeraToken tests', function (accounts) {
                     it('decreases the spender allowance', function () {
 
                         return Promise.all([
-                            bankeraTokenInstance.transferFrom(owner, to, amount, { from: spender })
+                            movementTokenInstance.transferFrom(owner, to, amount, { from: spender })
                         ]).then(function(values) {
                             return Promise.all([
-                                bankeraTokenInstance.allowance(owner, spender)
+                                movementTokenInstance.allowance(owner, spender)
                             ])
                         }).then(function(allowance) {
                             assert.equal(allowance, 0);
@@ -581,7 +581,7 @@ contract('Approve BankeraToken tests', function (accounts) {
 
                     it('emits a transfer event', function () {
                         return Promise.all([
-                            bankeraTokenInstance.transferFrom(owner, to, amount, { from: spender })
+                            movementTokenInstance.transferFrom(owner, to, amount, { from: spender })
                         ]).then(function(tx) {
                             var logs = tx[0].logs;
 
@@ -606,7 +606,7 @@ contract('Approve BankeraToken tests', function (accounts) {
                     const amount = 101;
 
                     it('reverts', function () {
-                        return bankeraTokenInstance.transferFrom(owner, to, amount, { from: spender })
+                        return movementTokenInstance.transferFrom(owner, to, amount, { from: spender })
                             .then(function (tx) {
                                 console.log(tx);
                                 assert.fail("Unexpected error");
@@ -620,8 +620,8 @@ contract('Approve BankeraToken tests', function (accounts) {
             describe('when the spender does not have enough approved balance', function () {
                 beforeEach(function () {
                     return Promise.all([
-                        bankeraTokenInstance.approve(spender, 99, { from: owner }),
-                        bankeraTokenInstance.issueTokens(owner, 100, {from: contractOwner})
+                        movementTokenInstance.approve(spender, 99, { from: owner }),
+                        movementTokenInstance.issueTokens(owner, 100, {from: contractOwner})
                     ]);
                 });
 
@@ -629,7 +629,7 @@ contract('Approve BankeraToken tests', function (accounts) {
                     const amount = 100;
 
                     it('reverts', function () {
-                        return bankeraTokenInstance.transferFrom(owner, to, amount, { from: spender })
+                        return movementTokenInstance.transferFrom(owner, to, amount, { from: spender })
                             .then(function (tx) {
                                 console.log(tx);
                                 assert.fail("Unexpected error");
@@ -643,7 +643,7 @@ contract('Approve BankeraToken tests', function (accounts) {
                     const amount = 101;
 
                     it('reverts', function () {
-                        return bankeraTokenInstance.transferFrom(owner, to, amount, { from: spender })
+                        return movementTokenInstance.transferFrom(owner, to, amount, { from: spender })
                             .then(function (tx) {
                                 console.log(tx);
                                 assert.fail("Unexpected error");
@@ -660,11 +660,11 @@ contract('Approve BankeraToken tests', function (accounts) {
             const to = ZERO_ADDRESS;
 
             beforeEach(function () {
-                bankeraTokenInstance.approve(spender, amount, { from: owner });
+                movementTokenInstance.approve(spender, amount, { from: owner });
             });
 
             it('reverts', function () {
-                return bankeraTokenInstance.transferFrom(owner, to, amount, { from: spender })
+                return movementTokenInstance.transferFrom(owner, to, amount, { from: spender })
                     .then(function (tx) {
                         console.log(tx);
                         assert.fail("Unexpected error");
@@ -676,12 +676,12 @@ contract('Approve BankeraToken tests', function (accounts) {
     });
 
     describe('transfer function', function () {
-        var bankeraTokenInstance;
+        var movementTokenInstance;
         var contractOwner;
 
         beforeEach(function () {
-            return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
-                bankeraTokenInstance = instance;
+            return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+                movementTokenInstance = instance;
                 contractOwner = accounts[0];
             });
         });
@@ -692,8 +692,8 @@ contract('Approve BankeraToken tests', function (accounts) {
 
             beforeEach(function () {
                 return Promise.all([
-                    bankeraTokenInstance.approve(owner, 100, { from: owner }),
-                    bankeraTokenInstance.issueTokens(owner, 100, {from: contractOwner})
+                    movementTokenInstance.approve(owner, 100, { from: owner }),
+                    movementTokenInstance.issueTokens(owner, 100, {from: contractOwner})
                 ]);
             });
 
@@ -701,7 +701,7 @@ contract('Approve BankeraToken tests', function (accounts) {
                 const amount = 101;
 
                 it('reverts', function () {
-                    return bankeraTokenInstance.transfer(to, amount, { from: owner })
+                    return movementTokenInstance.transfer(to, amount, { from: owner })
                         .then(function (tx) {
                             console.log(tx);
                             assert.fail("Unexpected error");
@@ -717,11 +717,11 @@ contract('Approve BankeraToken tests', function (accounts) {
                 it('transfers the requested amount', function () {
 
                     return Promise.all([
-                        bankeraTokenInstance.transfer(to, amount, { from: owner })
+                        movementTokenInstance.transfer(to, amount, { from: owner })
                     ]).then(function(tx) {
                         return Promise.all([
-                            bankeraTokenInstance.balanceOf(owner),
-                            bankeraTokenInstance.balanceOf(to)
+                            movementTokenInstance.balanceOf(owner),
+                            movementTokenInstance.balanceOf(to)
                         ])
                     }).then(function(values) {
                         assert.equal(values[0], 0);
@@ -732,7 +732,7 @@ contract('Approve BankeraToken tests', function (accounts) {
                 it('emits a transfer event', function () {
 
                     return Promise.all([
-                        bankeraTokenInstance.transfer(to, amount, { from: owner })
+                        movementTokenInstance.transfer(to, amount, { from: owner })
                     ]).then(function(tx) {
                         var logs = tx[0].logs;
 
@@ -759,7 +759,7 @@ contract('Approve BankeraToken tests', function (accounts) {
             const owner = accounts[11];
 
             it('reverts', function () {
-                return bankeraTokenInstance.transfer(to, 100, { from: owner })
+                return movementTokenInstance.transfer(to, 100, { from: owner })
                     .then(function (tx) {
                         console.log(tx);
                         assert.fail("Unexpected error");

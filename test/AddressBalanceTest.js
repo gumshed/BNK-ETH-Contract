@@ -1,6 +1,6 @@
 const assertJump = require('./helpers/assertJump');
 var contractHelper = require('./helpers/contractHelper.js');
-var BankeraToken = artifacts.require("./BankeraToken.sol");
+var MovemntToken = artifacts.require("./MovementToken.sol");
 var BigNumber = require('decimal.js');
 BigNumber.config({
     precision: 100,
@@ -24,11 +24,11 @@ contract('Address Balance tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[2];
-        var contributorAddress1sBNKAmount = 100;
+        var contributorAddress1sMVTAmount = 100;
         var weeksPerYear = 52;
         var fullYears = 10;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
           .then(function (instance) {
               contractInstance = instance;
               contractOwnerAddress = accounts[0];
@@ -41,7 +41,7 @@ contract('Address Balance tests', function (accounts) {
 
               //buy tokens for user
               return Promise.all([
-                  contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount, {from: contractOwnerAddress})
+                  contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount, {from: contractOwnerAddress})
               ])
           })
           .then(function (values) {
@@ -54,7 +54,7 @@ contract('Address Balance tests', function (accounts) {
 
               //buy tokens for user
               return Promise.all([
-                  contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount, {from: contractOwnerAddress})
+                  contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount, {from: contractOwnerAddress})
               ])
           })
           .then(function(tx) {
@@ -62,7 +62,7 @@ contract('Address Balance tests', function (accounts) {
 
               var arr = [];
               for(var i = 0; i < weeksPerYear*fullYears; i++){
-                  arr.push(contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount, {from: contractOwnerAddress}));
+                  arr.push(contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount, {from: contractOwnerAddress}));
               }
               return Promise.all(arr);
           })
