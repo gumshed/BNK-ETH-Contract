@@ -47,27 +47,27 @@ contract('Safe Math tests', function (accounts) {
         var a = 5678;
         var b = 1234;
 
-        var contributorAddress1sBNKAmount = 15478545;
-        var contributorAddress2sBNKAmount = BigNumber('1');
-        var contributorAddress3sBNKAmount = BigNumber('156895845826264');
-        var contributorAddress4sBNKAmount = BigNumber('91258465416894658');
+        var contributorAddress1sMVTAmount = 15478545;
+        var contributorAddress2sMVTAmount = BigNumber('1');
+        var contributorAddress3sMVTAmount = BigNumber('156895845826264');
+        var contributorAddress4sMVTAmount = BigNumber('91258465416894658');
         var sum = BigNumber('0');
 
         return safeMathInstance.safeAdd.call(a, b)
             .then(function(result) {
                 assert.equal(result, '6912');
 
-                return safeMathInstance.safeAdd.call(contributorAddress3sBNKAmount.toFixed(0), contributorAddress4sBNKAmount.toFixed(0))
+                return safeMathInstance.safeAdd.call(contributorAddress3sMVTAmount.toFixed(0), contributorAddress4sMVTAmount.toFixed(0))
             }).then(function(result) {
                 assert.equal(result, '91415361262720922');
                 sum = result;
 
-                return safeMathInstance.safeAdd.call(sum.toFixed(0), contributorAddress2sBNKAmount.toFixed(0))
+                return safeMathInstance.safeAdd.call(sum.toFixed(0), contributorAddress2sMVTAmount.toFixed(0))
             }).then(function(result) {
                 assert.equal(result, '91415361262720923');
                 sum = result;
 
-                return safeMathInstance.safeAdd.call(sum.toFixed(0), contributorAddress1sBNKAmount.toFixed(0))
+                return safeMathInstance.safeAdd.call(sum.toFixed(0), contributorAddress1sMVTAmount.toFixed(0))
             }).then(function(result) {
                 assert.equal(result, '91415361278199468');
                 sum = result;

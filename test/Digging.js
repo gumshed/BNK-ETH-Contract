@@ -1,7 +1,7 @@
 const assertJump = require('./helpers/assertJump');
 var contractHelper = require('./helpers/contractHelper.js');
 
-var BankeraToken = artifacts.require("./BankeraToken.sol");
+var MovementToken = artifacts.require("./MovementToken.sol");
 var ERC20DemoToken = artifacts.require("./helpers/ERC20Demo.sol");
 var ERC20_tokenFallback_DemoToken = artifacts.require("./helpers/ERC20DemoCallBack.sol");
 
@@ -43,12 +43,12 @@ contract('Digging ERC223', function (accounts) {
     it("ERC223 transfer to ERC20", function () {
         var contractOwnerAddress;
         var contributorAddress1 = accounts[2];
-        var contributorAddress1sBNKAmount = new BigNumber("15478545");
+        var contributorAddress1sMVTAmount = new BigNumber("15478545");
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
+        return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
             bankeraInstance = instance;
             contractOwnerAddress = accounts[0];
-            return bankeraInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+            return bankeraInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
         }).catch(function (error) {
             console.log(error);
             assert.fail('Unexpected fail');
@@ -57,7 +57,7 @@ contract('Digging ERC223', function (accounts) {
             assert.isOk(tx, "should be transaction");
 
             //transfer tokens to ERC20 contract
-            return bankeraInstance.transfer(ERC20DemoInstance.address, contributorAddress1sBNKAmount.toFixed(0), {from: contributorAddress1})
+            return bankeraInstance.transfer(ERC20DemoInstance.address, contributorAddress1sMVTAmount.toFixed(0), {from: contributorAddress1})
         })
         .then(function (tx) {
             console.log("tx", tx);
@@ -71,12 +71,12 @@ contract('Digging ERC223', function (accounts) {
     it("ERC223 transfer to contract with tokenFallback function", function () {
         var contractOwnerAddress;
         var contributorAddress1 = accounts[2];
-        var contributorAddress1sBNKAmount = new BigNumber("15478545");
+        var contributorAddress1sMVTAmount = new BigNumber("15478545");
 
-        return BankeraToken.deployed().then(function (instance) {
+        return MovementToken.deployed().then(function (instance) {
             bankeraInstance = instance;
             contractOwnerAddress = accounts[0];
-            return bankeraInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+            return bankeraInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
         }).catch(function (error) {
             console.log(error);
             assert.fail('Unexpected fail');
@@ -85,7 +85,7 @@ contract('Digging ERC223', function (accounts) {
                 assert.isOk(tx, "should be transaction");
 
                 //transfer tokens to ERC20 contract
-                return bankeraInstance.transfer(ERC20Demo_tokenFallback_Instance.address, contributorAddress1sBNKAmount.toFixed(0), {from: contributorAddress1})
+                return bankeraInstance.transfer(ERC20Demo_tokenFallback_Instance.address, contributorAddress1sMVTAmount.toFixed(0), {from: contributorAddress1})
             })
             .then(function (tx) {
                 assert.isOk(tx, "should be transaction");

@@ -16,7 +16,7 @@ contract('MovementToken mixed tests', function (accounts) {
         setTimeout(done, 2500);
     });
 
-    var totalSupplyInsBNK = BigNumber('2500000000000000000');
+    var totalSupplyInsMVT = BigNumber('2500000000000000000');
     var blocksPerRound = 15;
     var startingRoundNumber = BigNumber(0);
 
@@ -32,7 +32,7 @@ contract('MovementToken mixed tests', function (accounts) {
             assert.equal(balance.toFixed(0), 0, "Contract Owner balance should be zero");
             return movementTokenInstance.totalSupply()
         }).then(function (totalSupply) {
-            assert.equal(totalSupply.toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+            assert.equal(totalSupply.toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
             return movementTokenInstance.currentRound.call()
         }).then(function (currentRound) {
             assert.equal(currentRound.toFixed(0), 0, "currentRound should be 0");
@@ -44,7 +44,7 @@ contract('MovementToken mixed tests', function (accounts) {
         var contractOwner;
 
         var contributorAddress1 = accounts[3];
-        var contributorAddress1sBNKAmount = BigNumber('1721541201');
+        var contributorAddress1sMVTAmount = BigNumber('1721541201');
 
         var issueManager = accounts[5];
 
@@ -56,9 +56,9 @@ contract('MovementToken mixed tests', function (accounts) {
             assert.equal(balance.toFixed(0), 0, "Contract Owner balance should be zero");
             return movementTokenInstance.totalSupply()
         }).then(function (totalSupply) {
-            assert.equal(totalSupply.toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+            assert.equal(totalSupply.toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
-            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwner});
+            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwner});
         }).catch(function(tx) {
             console.log("tx sendTransaction2 ", tx);
             assert.fail("Unexpected error");
@@ -66,9 +66,9 @@ contract('MovementToken mixed tests', function (accounts) {
 
             return movementTokenInstance.balanceOf.call(contributorAddress1);
         }).then(function (balance) {
-            assert.equal(balance.toFixed(0), contributorAddress1sBNKAmount.toFixed(0), "Incorrect contributorAddress1 balance");
+            assert.equal(balance.toFixed(0), contributorAddress1sMVTAmount.toFixed(0), "Incorrect contributorAddress1 balance");
 
-            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: issueManager});
+            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: issueManager});
         }).then(function (tx) {
             console.log(tx);
             assert.fail("Unexpected error");
@@ -77,17 +77,17 @@ contract('MovementToken mixed tests', function (accounts) {
 
             return movementTokenInstance.balanceOf.call(contributorAddress1);
         }).then(function (balance) {
-            assert.equal(balance.toFixed(0), contributorAddress1sBNKAmount.toFixed(0), "Incorrect contributorAddress1 balance");
+            assert.equal(balance.toFixed(0), contributorAddress1sMVTAmount.toFixed(0), "Incorrect contributorAddress1 balance");
 
             return movementTokenInstance.changeIssueManager(issueManager, {from: contractOwner});
         }).then(function (tx) {
 
-            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: issueManager});
+            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: issueManager});
         }).then(function (tx) {
 
             return movementTokenInstance.balanceOf.call(contributorAddress1);
         }).then(function (balance) {
-            assert.equal(balance.toFixed(0), contributorAddress1sBNKAmount.mul(2).toFixed(0), "Incorrect contributorAddress1 balance");
+            assert.equal(balance.toFixed(0), contributorAddress1sMVTAmount.mul(2).toFixed(0), "Incorrect contributorAddress1 balance");
         })
 
     });
@@ -98,7 +98,7 @@ contract('MovementToken mixed tests', function (accounts) {
         var bigNumberOfRounds = 280;
 
         var contributorAddress1 = accounts[3];
-        var contributorAddress1sBNKAmount = BigNumber('1721541201');
+        var contributorAddress1sMVTAmount = BigNumber('1721541201');
 
         return MovementToken.new(blocksPerRound, startingRoundNumber).then(function (instance) {
             movementTokenInstance = instance;
@@ -108,7 +108,7 @@ contract('MovementToken mixed tests', function (accounts) {
             assert.equal(balance.toFixed(0), 0, "Contract Owner balance should be zero");
             return movementTokenInstance.totalSupply()
         }).then(function (totalSupply) {
-            assert.equal(totalSupply.toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+            assert.equal(totalSupply.toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
             return Promise.all([
                 movementTokenInstance.currentRound.call(),
                 movementTokenInstance.blocksPerRound.call()
@@ -119,7 +119,7 @@ contract('MovementToken mixed tests', function (accounts) {
             return contractHelper.mineNewBlocks(newBlocks.toFixed(0));
         }).then(function (tx) {
 
-            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwner});
+            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwner});
         })
         .then(function (tx) {
             return movementTokenInstance.currentRound.call()
@@ -127,7 +127,7 @@ contract('MovementToken mixed tests', function (accounts) {
         .then(function (currentRound) {
             assert.equal(currentRound.toFixed(0), bigNumberOfRounds, "currentRound should be " + bigNumberOfRounds);
 
-            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwner});
+            return movementTokenInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwner});
         })
         .catch(function(error) {
             console.log(error);
@@ -220,7 +220,7 @@ contract('MovementToken mixed tests', function (accounts) {
         var contributorAddress = accounts[6];
         var receiverAddress = accounts[2];
         var contributorAddressAmount = BigNumber('125412542545499');
-        var bnkTransferAmount;
+        var mvtTransferAmount;
 
         return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
@@ -239,11 +239,11 @@ contract('MovementToken mixed tests', function (accounts) {
                     contractInstance.balanceOf.call(receiverAddress)
                 ])
             }).then(function(values) {
-                bnkTransferAmount = BigNumber(values[0].toFixed(0));
-                assert.equal(values[0].toFixed(0), bnkTransferAmount.toFixed(0), "Contributor Balance can't be zero");
-                assert.equal(values[1].toFixed(0), 0, "receiverAddress BNK token balance should be zero");
+                mvtTransferAmount = BigNumber(values[0].toFixed(0));
+                assert.equal(values[0].toFixed(0), mvtTransferAmount.toFixed(0), "Contributor Balance can't be zero");
+                assert.equal(values[1].toFixed(0), 0, "receiverAddress MVT token balance should be zero");
                 return Promise.all([
-                    contractInstance.transfer(receiverAddress, bnkTransferAmount.toFixed(0), {from: contributorAddress})
+                    contractInstance.transfer(receiverAddress, mvtTransferAmount.toFixed(0), {from: contributorAddress})
                 ])
             })
             .then(function() {
@@ -257,11 +257,11 @@ contract('MovementToken mixed tests', function (accounts) {
                 assert.isOk(false, "Unexpected exception");
             })
             .then(function(values) {
-                assert.equal(values[0].toFixed(0), 0, "Contributor BNK token balance should be zero");
-                assert.equal(values[1].toFixed(0), bnkTransferAmount.toFixed(0), "receiverAddress BNK Balance should be " + bnkTransferAmount);
+                assert.equal(values[0].toFixed(0), 0, "Contributor MVT token balance should be zero");
+                assert.equal(values[1].toFixed(0), mvtTransferAmount.toFixed(0), "receiverAddress MVT Balance should be " + mvtTransferAmount);
                 //try so send from empty account
 
-                return contractInstance.transfer(receiverAddress, bnkTransferAmount.toFixed(0), {from: contributorAddress})
+                return contractInstance.transfer(receiverAddress, mvtTransferAmount.toFixed(0), {from: contributorAddress})
             }).then(function(tx) {
                 console.log(tx);
                 assert.isOk(false, "Unexpected exception");
@@ -284,7 +284,7 @@ contract('MovementToken mixed tests', function (accounts) {
         var contributorAddress3DepositAmount = BigNumber('799090000');
         var contributorAddress4DepositAmount = BigNumber('874514648511815548');
         var contributorAddress5DepositAmount = BigNumber('5448454879999');
-        var contributorAddress6BNKAmount = 0;
+        var contributorAddress6MVTAmount = 0;
 
         return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
@@ -447,8 +447,8 @@ contract('MovementToken mixed tests', function (accounts) {
                 assert.equal(values[4].toFixed(0), contributorAddress5DepositAmount.toFixed(0), "contributorAddress5 contract Balance is wrong");
                 assert.equal(values[5].toFixed(0), 0, "contributorAddress6 contract Balance is wrong");
 
-                //all BNK token go to contributorAddress6
-                contributorAddress6BNKAmount = BigNumber(values[0].toString())
+                //all MVT token go to contributorAddress6
+                contributorAddress6MVTAmount = BigNumber(values[0].toString())
                     .add(BigNumber(values[1].toString()))
                     .add(BigNumber(values[2].toString()))
                     .add(BigNumber(values[3].toString()))
@@ -479,7 +479,7 @@ contract('MovementToken mixed tests', function (accounts) {
                 assert.equal(values[2].toFixed(0), 0, "contributorAddress3 contract Balance is wrong");
                 assert.equal(values[3].toFixed(0), 0, "contributorAddress4 contract Balance is wrong");
                 assert.equal(values[4].toFixed(0), 0, "contributorAddress5 contract Balance is wrong");
-                assert.equal(values[5].toFixed(0), contributorAddress6BNKAmount.toFixed(0), "contributorAddress6 contract Balance is wrong");
+                assert.equal(values[5].toFixed(0), contributorAddress6MVTAmount.toFixed(0), "contributorAddress6 contract Balance is wrong");
 
                 return contractHelper.mineNextBlock(15*60);
             })
@@ -501,7 +501,7 @@ contract('MovementToken mixed tests', function (accounts) {
                 assert.equal(values[2], 0, "contributorAddress3 contract Balance is wrong");
                 assert.equal(values[3], 0, "contributorAddress4 contract Balance is wrong");
                 assert.equal(values[4], 0, "contributorAddress5 contract Balance is wrong");
-                assert.equal(values[5], contributorAddress6BNKAmount.toFixed(0), "contributorAddress6 contract Balance is wrong");
+                assert.equal(values[5], contributorAddress6MVTAmount.toFixed(0), "contributorAddress6 contract Balance is wrong");
 
                 return Promise.all([
                     contractInstance.transfer(contributorAddress1, 500, {from: contributorAddress6}),
@@ -525,7 +525,7 @@ contract('MovementToken mixed tests', function (accounts) {
                 assert.equal(values[2], 999999, "contributorAddress3 contract Balance is wrong");
                 assert.equal(values[3], 0, "contributorAddress4 contract Balance is wrong");
                 assert.equal(values[4], 0, "contributorAddress5 contract Balance is wrong");
-                assert.equal(values[5], BigNumber(contributorAddress6BNKAmount).sub(BigNumber(500)).sub(BigNumber(999999)).toFixed(0), "contributorAddress6 contract Balance is wrong");
+                assert.equal(values[5], BigNumber(contributorAddress6MVTAmount).sub(BigNumber(500)).sub(BigNumber(999999)).toFixed(0), "contributorAddress6 contract Balance is wrong");
             })
     });
 

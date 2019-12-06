@@ -1,6 +1,6 @@
 const assertJump = require('./helpers/assertJump');
 var contractHelper = require('./helpers/contractHelper.js');
-var BankeraToken = artifacts.require("./BankeraToken.sol");
+var MovementToken = artifacts.require("./MovementToken.sol");
 var BigNumber = require('decimal.js');
 BigNumber.config({
     precision: 100,
@@ -24,9 +24,9 @@ contract('Configure reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[2];
-        var contributorAddress1sBNKAmount = 15478545;
+        var contributorAddress1sMVTAmount = 15478545;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -38,7 +38,7 @@ contract('Configure reward tests', function (accounts) {
                 assert.isOk(tx, "should be transaction");
 
                 //buy tokens for user
-                return contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount, {from: contractOwnerAddress})
+                return contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount, {from: contractOwnerAddress})
             }).then(function (tx) {
                 assert.isOk(tx, "should be transaction");
 
@@ -47,10 +47,10 @@ contract('Configure reward tests', function (accounts) {
                 assert.isOk(tx, "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf.call(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf.call(contractOwnerAddress) //contract owner MVT balance
                 ])
             }).then(function(values) {
-                assert.equal(values[0].toFixed(0), 0, "contract owner BNK balance should be zero");
+                assert.equal(values[0].toFixed(0), 0, "contract owner MVT balance should be zero");
 
                 return contractHelper.mineNewBlocks(blocksPerRound.plus(BigNumber(1)));
             }).then(function(result) {
@@ -90,9 +90,9 @@ contract('Configure reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[2];
-        var contributorAddress1sBNKAmount = 15478545;
+        var contributorAddress1sMVTAmount = 15478545;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -105,7 +105,7 @@ contract('Configure reward tests', function (accounts) {
 
                 //buy tokens for user
                 return Promise.all([
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount, {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount, {from: contractOwnerAddress})
                 ])
             })
             .then(function (values) {
@@ -152,9 +152,9 @@ contract('Configure reward tests', function (accounts) {
           var contractOwnerAddress;
           var contractAddress;
           var contributorAddress1 = accounts[2];
-          var contributorAddress1sBNKAmount = 15478545;
+          var contributorAddress1sMVTAmount = 15478545;
 
-          return BankeraToken.new(blocksPerRound, startingRoundNumber)
+          return MovementToken.new(blocksPerRound, startingRoundNumber)
               .then(function (instance) {
                   contractInstance = instance;
                   contractOwnerAddress = accounts[0];
@@ -167,7 +167,7 @@ contract('Configure reward tests', function (accounts) {
 
                   //buy tokens for user
                   return Promise.all([
-                      contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount, {from: contractOwnerAddress})
+                      contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount, {from: contractOwnerAddress})
                   ])
               })
               .then(function (values) {
@@ -211,9 +211,9 @@ contract('Configure reward tests', function (accounts) {
       var contractOwnerAddress;
       var contractAddress;
       var contributorAddress1 = accounts[2];
-      var contributorAddress1sBNKAmount = 15478545;
+      var contributorAddress1sMVTAmount = 15478545;
 
-      return BankeraToken.new(blocksPerRound, startingRoundNumber)
+      return MovementToken.new(blocksPerRound, startingRoundNumber)
           .then(function (instance) {
               contractInstance = instance;
               contractOwnerAddress = accounts[0];
@@ -226,7 +226,7 @@ contract('Configure reward tests', function (accounts) {
 
               //buy tokens for user
               return Promise.all([
-                  contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount, {from: contractOwnerAddress})
+                  contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount, {from: contractOwnerAddress})
               ])
           })
           .then(function (values) {
@@ -272,9 +272,9 @@ contract('Configure reward tests', function (accounts) {
       var contractOwnerAddress;
       var contractAddress;
       var contributorAddress1 = accounts[2];
-      var contributorAddress1sBNKAmount = 15478545;
+      var contributorAddress1sMVTAmount = 15478545;
 
-      return BankeraToken.new(blocksPerRound, startingRoundNumber)
+      return MovementToken.new(blocksPerRound, startingRoundNumber)
           .then(function (instance) {
               contractInstance = instance;
               contractOwnerAddress = accounts[0];
@@ -287,7 +287,7 @@ contract('Configure reward tests', function (accounts) {
 
               //buy tokens for user
               return Promise.all([
-                  contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount, {from: contractOwnerAddress})
+                  contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount, {from: contractOwnerAddress})
               ])
           })
           .then(function (values) {
@@ -334,9 +334,9 @@ contract('Configure reward tests', function (accounts) {
       var contractOwnerAddress;
       var contractAddress;
       var contributorAddress1 = accounts[2];
-      var contributorAddress1sBNKAmount = 15478545;
+      var contributorAddress1sMVTAmount = 15478545;
 
-      return BankeraToken.new(blocksPerRound, startingRoundNumber)
+      return MovementToken.new(blocksPerRound, startingRoundNumber)
           .then(function (instance) {
               contractInstance = instance;
               contractOwnerAddress = accounts[0];
@@ -349,7 +349,7 @@ contract('Configure reward tests', function (accounts) {
 
               //buy tokens for user
               return Promise.all([
-                  contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount, {from: contractOwnerAddress})
+                  contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount, {from: contractOwnerAddress})
               ])
           })
           .then(function (values) {
@@ -407,9 +407,9 @@ contract('Configure reward tests', function (accounts) {
       var contractOwnerAddress;
       var contractAddress;
       var contributorAddress1 = accounts[2];
-      var contributorAddress1sBNKAmount = 15478545;
+      var contributorAddress1sMVTAmount = 15478545;
 
-      return BankeraToken.new(blocksPerRound, startingRoundNumber)
+      return MovementToken.new(blocksPerRound, startingRoundNumber)
           .then(function (instance) {
               contractInstance = instance;
               contractOwnerAddress = accounts[0];
@@ -422,7 +422,7 @@ contract('Configure reward tests', function (accounts) {
 
               //buy tokens for user
               return Promise.all([
-                  contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount, {from: contractOwnerAddress})
+                  contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount, {from: contractOwnerAddress})
               ])
           })
           .then(function (values) {

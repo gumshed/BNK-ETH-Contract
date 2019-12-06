@@ -1,7 +1,7 @@
 const assertJump = require('./helpers/assertJump');
 var contractHelper = require('./helpers/contractHelper.js');
 
-var BankeraToken = artifacts.require("./BankeraToken.sol");
+var MovementToken = artifacts.require("./MovementToken.sol");
 var BigNumber = require('decimal.js');
 BigNumber.config({
     precision: 100,
@@ -19,19 +19,19 @@ contract('Paused contract functionality', function (accounts) {
     var contractAddress;
 
     var contributorAddress1 = accounts[12];
-    var contributorAddress1sBNKAmount = new BigNumber('15478545');
-    var totalSupplyInsBNK = BigNumber('2500000000000000000');
+    var contributorAddress1sMVTAmount = new BigNumber('15478545');
+    var totalSupplyInsMVT = BigNumber('2500000000000000000');
 
     it("10.0 " + "Deploy Bankera contract", function () {
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
                 contractAddress = instance.address;
 
                 return Promise.all([
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress}),
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress}),
                     contractInstance.sendTransaction({value: web3.toWei(1, "Ether"), from: accounts[9]})
                 ])
             })
@@ -259,7 +259,7 @@ contract('Paused contract functionality', function (accounts) {
         return contractInstance.balanceOf(contributorAddress1)
             .then(function (result) {
                 assert.isOk(result);
-                assert.equal(result.toFixed(0), contributorAddress1sBNKAmount.toFixed(0), "Incorrect contractOwnerAddress BNK balance");
+                assert.equal(result.toFixed(0), contributorAddress1sMVTAmount.toFixed(0), "Incorrect contractOwnerAddress MVT balance");
             })
             .catch(function (error) {
                 console.log(error);
@@ -271,7 +271,7 @@ contract('Paused contract functionality', function (accounts) {
         return contractInstance.totalSupply()
             .then(function (result) {
                 assert.isOk(result);
-                assert.equal(result.toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(result.toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
             })
             .catch(function (error) {
                 console.log(error);

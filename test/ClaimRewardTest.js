@@ -1,6 +1,6 @@
 const assertJump = require('./helpers/assertJump');
 var contractHelper = require('./helpers/contractHelper.js');
-var BankeraToken = artifacts.require("./BankeraToken.sol");
+var MovementToken = artifacts.require("./MovementToken.sol");
 var BigNumber = require('decimal.js');
 BigNumber.config({
     precision: 100,
@@ -16,7 +16,7 @@ contract('Claim reward tests', function (accounts) {
         setTimeout(done, 2500);
     });
 
-    var totalSupplyInsBNK = BigNumber('2500000000000000000');
+    var totalSupplyInsMVT = BigNumber('2500000000000000000');
     var blocksPerRound = 55;
     var startingRoundNumber = BigNumber(0);
 
@@ -27,7 +27,7 @@ contract('Claim reward tests', function (accounts) {
         var contributorAddress1 = accounts[2];
 
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -39,7 +39,7 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0], totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0], totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return contractInstance.claimReward({from: contributorAddress1})
             })
@@ -78,10 +78,10 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
-        var contributorAddress1sBNKAmount = BigNumber('541');
+        var contributorAddress1sMVTAmount = BigNumber('541');
         var contributorAmountBeforeWithdraw;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -92,14 +92,14 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0], totalSupplyInsBNK.toFixed(0), "totalSupply should be 0");
+                assert.equal(values[0], totalSupplyInsMVT.toFixed(0), "totalSupply should be 0");
 
                 return contractHelper.mineNextBlock(15*60);
             })
             .then(function (value) {
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -128,7 +128,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[2], "should be transaction");
                 assert.isOk(values[3], "should be transaction");
 
-                return contractInstance.balanceOf(contractOwnerAddress); //contract owner BNK balance
+                return contractInstance.balanceOf(contractOwnerAddress); //contract owner MVT balance
             })
             .then(function(value) {
                 assert.equal(value.toString(), 0, "should be zero");
@@ -144,7 +144,7 @@ contract('Claim reward tests', function (accounts) {
             }).then(function (values) {
 
                 var reward = [values[0], values[1], values[2]];
-                var issuedTokensInRound = [contributorAddress1sBNKAmount, contributorAddress1sBNKAmount, contributorAddress1sBNKAmount];
+                var issuedTokensInRound = [contributorAddress1sMVTAmount, contributorAddress1sMVTAmount, contributorAddress1sMVTAmount];
 
                 var calculatedRewardAmount = contractHelper.calculateReward(reward, issuedTokensInRound);
                 assert.equal(calculatedRewardAmount.toString(), BigNumber(values[3].toString()).toString(), "Calculated claimable reward should be same");
@@ -174,10 +174,10 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[7];
-        var contributorAddress1sBNKAmount = BigNumber('15545412541');
+        var contributorAddress1sMVTAmount = BigNumber('15545412541');
         var contributorAmountBeforeWithdraw;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -188,14 +188,14 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "totalSupply should be 0");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "totalSupply should be 0");
 
                 return contractHelper.mineNextBlock(2*60);
             })
             .then(function (value) {
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -212,7 +212,7 @@ contract('Claim reward tests', function (accounts) {
 
                 return Promise.all([
                     contractInstance.sendTransaction({value: web3.toWei(2, "ether")}),
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .catch(function(error) {
@@ -222,7 +222,7 @@ contract('Claim reward tests', function (accounts) {
             .then(function(values) {
                 assert.equal(BigNumber(web3.eth.getBalance(contractAddress).toString()).toFixed(0), BigNumber(web3.toWei(2, "ether").toString()).toFixed(0), "Contract ETH Balance is wrong");
                 assert.isOk(values[0], "should be transaction");
-                assert.equal(values[1], 0, "Incorrect BNK balance");
+                assert.equal(values[1], 0, "Incorrect MVT balance");
 
                 contributorAmountBeforeWithdraw = BigNumber(web3.eth.getBalance(contributorAddress1).toString());
 
@@ -241,11 +241,11 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
-        var contributorAddress1sBNKAmount = BigNumber('532541');
+        var contributorAddress1sMVTAmount = BigNumber('532541');
         var contributorAmountBeforeWithdraw;
         var claimedReward;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -256,14 +256,14 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return contractHelper.mineNextBlock(15);
             })
             .then(function (value) {
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -298,11 +298,11 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[5], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
-                assert.equal(values[0], 0, "Incorrect contract owner BNK balance");
+                assert.equal(values[0], 0, "Incorrect contract owner MVT balance");
 
                 return Promise.all([
                     contractInstance.calculateClaimableReward(contributorAddress1, {from: contributorAddress1})
@@ -342,10 +342,10 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
-        var contributorAddress1sBNKAmount = BigNumber('532541');
+        var contributorAddress1sMVTAmount = BigNumber('532541');
         var contributorAmountBeforeWithdraw;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -356,11 +356,11 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -390,7 +390,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[4], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
@@ -418,10 +418,10 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
-        var contributorAddress1sBNKAmount = BigNumber('532541');
+        var contributorAddress1sMVTAmount = BigNumber('532541');
         var contributorAmountBeforeWithdraw;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -432,14 +432,14 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return contractHelper.mineNextBlock(11*60);
             })
             .then(function (tx) {
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -467,7 +467,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[4], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
@@ -494,10 +494,10 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
-        var contributorAddress1sBNKAmount = BigNumber('971532543');
+        var contributorAddress1sMVTAmount = BigNumber('971532543');
         var contributorAmountBeforeWithdraw;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -508,11 +508,11 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -540,7 +540,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[4], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
@@ -567,11 +567,11 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
-        var contributorAddress1sBNKAmount = 532556148151541;
+        var contributorAddress1sMVTAmount = 532556148151541;
         var contributorAmountBeforeWithdraw;
         var claimedReward;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -582,11 +582,11 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount, {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount, {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -616,7 +616,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[5], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
@@ -684,11 +684,11 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
-        var contributorAddress1sBNKAmount = BigNumber('532556148151541');
+        var contributorAddress1sMVTAmount = BigNumber('532556148151541');
         var contributorAmountBeforeWithdraw;
         var claimedReward;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -699,11 +699,11 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -733,7 +733,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[5], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
@@ -785,17 +785,17 @@ contract('Claim reward tests', function (accounts) {
             })
     });
 
-    it("15.10 " + "Claim reward for all configured rounds, sell all BNK tokens and try again to claim reward", function () {
+    it("15.10 " + "Claim reward for all configured rounds, sell all MVT tokens and try again to claim reward", function () {
         var contractInstance;
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
         var contributorAddress2 = accounts[7];
-        var contributorAddress1sBNKAmount = BigNumber('532556148151541');
+        var contributorAddress1sMVTAmount = BigNumber('532556148151541');
         var contributorAmountBeforeWithdraw;
         var claimedReward;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -806,14 +806,14 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return contractHelper.mineNextBlock(12*60);
             })
             .then(function (value) {
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -847,7 +847,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[5], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
@@ -889,7 +889,7 @@ contract('Claim reward tests', function (accounts) {
                 return contractInstance.accountBalances(contributorAddress1);
             })
             .then(function (value) {
-                assert.equal(value[0].toString(), 0, "BNK balance after all BNK transfer should be 0");
+                assert.equal(value[0].toString(), 0, "MVT balance after all MVT transfer should be 0");
 
                 return Promise.all([
                     contractInstance.calculateClaimableReward(contributorAddress1, {from: contributorAddress1}),
@@ -903,21 +903,21 @@ contract('Claim reward tests', function (accounts) {
                 return contractInstance.balanceOf(contributorAddress1);
             })
             .then(function(values) {
-                assert.equal(0, values.toString(), "BNK balance after all BNK transfer should be 0");
+                assert.equal(0, values.toString(), "MVT balance after all MVT transfer should be 0");
             })
     });
 
-    it("15.11 " + "Claim reward for all configured rounds, sell all BNK tokens, wait few rounds and try again to claim reward", function () {
+    it("15.11 " + "Claim reward for all configured rounds, sell all MVT tokens, wait few rounds and try again to claim reward", function () {
         var contractInstance;
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
         var contributorAddress2 = accounts[7];
-        var contributorAddress1sBNKAmount = BigNumber('1232556148151541');
+        var contributorAddress1sMVTAmount = BigNumber('1232556148151541');
         var contributorAmountBeforeWithdraw;
         var claimedReward;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -928,11 +928,11 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -962,7 +962,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[5], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
@@ -1003,7 +1003,7 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0][0].toString(), 0, "BNK balance after all BNK transfer should be 0");
+                assert.equal(values[0][0].toString(), 0, "MVT balance after all MVT transfer should be 0");
 
                 return Promise.all([
                     contractInstance.calculateClaimableReward(contributorAddress1, {from: contributorAddress1})
@@ -1027,7 +1027,7 @@ contract('Claim reward tests', function (accounts) {
             })
             .then(function(values) {
                 assert.isOk(values[0], "should be transaction");
-                assert.equal(0, values[1], "BNK balance after all BNK transfer should be 0");
+                assert.equal(0, values[1], "MVT balance after all MVT transfer should be 0");
 
                 return contractHelper.mineNewBlocks(BigNumber(blocksPerRound*2).plus(BigNumber(1)));// finish 5,6 - start 7
             })
@@ -1067,11 +1067,11 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
-        var contributorAddress1sBNKAmount = 532558151541;
+        var contributorAddress1sMVTAmount = 532558151541;
         var contributorAmountBeforeWithdraw;
         var claimedReward;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -1082,11 +1082,11 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount, {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount, {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -1116,7 +1116,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[5], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
@@ -1149,14 +1149,14 @@ contract('Claim reward tests', function (accounts) {
             .then(function (values) {
                 assert.equal(values[0][2].toString(), claimedReward.toString(), "user marked claimed reward should be same as claimed");
                 assert.equal(values[0][1].toString(), 5, "user last claimed reward till round should be 5");
-                assert.equal(values[0][0].toString(), BigNumber(contributorAddress1sBNKAmount).toString(), "wrong user BNK tokens count");
+                assert.equal(values[0][0].toString(), BigNumber(contributorAddress1sMVTAmount).toString(), "wrong user MVT tokens count");
                 return contractHelper.mineNewBlocks(BigNumber(blocksPerRound*2).plus(BigNumber(7)));// finish 5,6 - start 7
             })
             .then(function (value) {
                 assert.isOk(value, "should be transaction");
 
                 return Promise.all([
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount, {from: contractOwnerAddress}),
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount, {from: contractOwnerAddress}),
                     contractInstance.setReward(5, web3.toWei(0.5, "ether")),
                     contractInstance.setReward(6, web3.toWei(0.5, "ether")),
                     contractInstance.sendTransaction({value: web3.toWei(1, "ether")})
@@ -1199,11 +1199,11 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
-        var contributorAddress1sBNKAmount = BigNumber('532558151540');
+        var contributorAddress1sMVTAmount = BigNumber('532558151540');
         var contributorAmountBeforeWithdraw;
         var claimedReward;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -1214,7 +1214,7 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return contractHelper.mineNextBlock(25*60+1);
             })
@@ -1223,7 +1223,7 @@ contract('Claim reward tests', function (accounts) {
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -1241,7 +1241,7 @@ contract('Claim reward tests', function (accounts) {
                     contractInstance.setReward(3, 0),
                     contractInstance.setReward(4, web3.toWei(1, "ether")),
                     contractInstance.sendTransaction({value: web3.toWei(3, "ether")}),
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
@@ -1284,7 +1284,7 @@ contract('Claim reward tests', function (accounts) {
             })
             .then(function (value) {
                 assert.isOk(value, "should be transaction");
-                return contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                return contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
             })
             .then(function (value) {
                 assert.isOk(value, "should be transaction");
@@ -1334,7 +1334,7 @@ contract('Claim reward tests', function (accounts) {
             .then(function (values) {
                 assert.equal(values[0][2].toString(), claimedReward.toString(), "user marked claimed reward should be same as claimed");
                 assert.equal(values[0][1].toString(), 9, "user last claimed reward till round should be 9");
-                assert.equal(values[0][0].toString(), BigNumber(contributorAddress1sBNKAmount).mul(2).toString(), "wrong user BNK tokens count");
+                assert.equal(values[0][0].toString(), BigNumber(contributorAddress1sMVTAmount).mul(2).toString(), "wrong user MVT tokens count");
             })
     });
 
@@ -1343,11 +1343,11 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
-        var contributorAddress1sBNKAmount = BigNumber('5000000000001');
+        var contributorAddress1sMVTAmount = BigNumber('5000000000001');
         var contributorAmountBeforeWithdraw;
         var claimedReward = BigNumber(0);
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -1359,11 +1359,11 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
                 assert.isOk(values[1].toFixed(0) > 0, "blocksPerRound should be greater when 0");
 
                 return Promise.all([
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function (value) {
@@ -1412,7 +1412,7 @@ contract('Claim reward tests', function (accounts) {
             .then(function (values) {
                 assert.equal(values[0][2].toString(), claimedReward.toString(), "user marked claimed reward should be same as claimed");
                 assert.equal(values[0][1].toString(), 4, "user last claimed reward till round should be 4");
-                assert.equal(values[0][0].toString(), BigNumber(contributorAddress1sBNKAmount).toString(), "wrong user BNK tokens count");
+                assert.equal(values[0][0].toString(), BigNumber(contributorAddress1sMVTAmount).toString(), "wrong user MVT tokens count");
             })
     });
 
@@ -1421,11 +1421,11 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
-        var contributorAddress1sBNKAmount = BigNumber('5000008000001');
+        var contributorAddress1sMVTAmount = BigNumber('5000008000001');
         var contributorAmountBeforeWithdraw;
         var claimedReward = BigNumber(0);
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -1437,11 +1437,11 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
                 assert.isOk(values[1].toFixed(0) > 0, "blocksPerRound should be greater when 0");
 
                 return Promise.all([
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function (value) {
@@ -1456,7 +1456,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(value, "should be transaction");
 
                 return Promise.all([
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function (value) {
@@ -1465,7 +1465,7 @@ contract('Claim reward tests', function (accounts) {
             })
             .then(function(value) {
                 return Promise.all([
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function (value) {
@@ -1513,7 +1513,7 @@ contract('Claim reward tests', function (accounts) {
             .then(function (values) {
                 assert.equal(values[0][2].toString(), claimedReward.toString(), "user marked claimed reward should be same as claimed");
                 assert.equal(values[0][1].toString(), 4, "user last claimed reward till round should be 4");
-                assert.equal(values[0][0].toString(), BigNumber(contributorAddress1sBNKAmount).mul(3).toString(), "wrong user BNK tokens count");
+                assert.equal(values[0][0].toString(), BigNumber(contributorAddress1sMVTAmount).mul(3).toString(), "wrong user MVT tokens count");
             })
     });
 
@@ -1523,12 +1523,12 @@ contract('Claim reward tests', function (accounts) {
         var contractAddress;
         var contributorAddress1 = accounts[8];
         var contributorAddress2 = accounts[7];
-        var contributorAddress1sBNKAmount = BigNumber('532541');
-        var contributorAddress2sBNKAmount = BigNumber('9000532743');
+        var contributorAddress1sMVTAmount = BigNumber('532541');
+        var contributorAddress2sMVTAmount = BigNumber('9000532743');
         var contributorAmountBeforeWithdraw;
         var claimedReward;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -1540,12 +1540,12 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
                 assert.isOk(values[1].toFixed(0) > 0, "blocksPerRound should be greater when 0");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress2, contributorAddress2sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress2, contributorAddress2sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -1556,7 +1556,7 @@ contract('Claim reward tests', function (accounts) {
             .then(function (value) {
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function (value) {
@@ -1588,7 +1588,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[7], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
@@ -1630,12 +1630,12 @@ contract('Claim reward tests', function (accounts) {
         var contractAddress;
         var contributorAddress1 = accounts[8];
         var contributorAddress2 = accounts[7];
-        var contributorAddress1sBNKAmount = BigNumber('1532541');
-        var contributorAddress2sBNKAmount = BigNumber('999999999999');
+        var contributorAddress1sMVTAmount = BigNumber('1532541');
+        var contributorAddress2sMVTAmount = BigNumber('999999999999');
         var contributorAmountBeforeWithdraw;
         var claimedReward;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -1647,12 +1647,12 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
                 assert.isOk(values[1].toFixed(0) > 0, "blocksPerRound should be greater when 0");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress2, contributorAddress2sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress2, contributorAddress2sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -1663,7 +1663,7 @@ contract('Claim reward tests', function (accounts) {
             .then(function (value) {
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function (value) {
@@ -1695,7 +1695,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[7], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
 
@@ -1746,7 +1746,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[5], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
@@ -1766,8 +1766,8 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                var expectedreward = BigNumber(4).mul(BigNumber(contributorAddress1sBNKAmount)).mul(BigNumber(values[2][2].toString()))
-                    .plus( BigNumber(contributorAddress1sBNKAmount).mul(BigNumber(values[3][2].toString())) );
+                var expectedreward = BigNumber(4).mul(BigNumber(contributorAddress1sMVTAmount)).mul(BigNumber(values[2][2].toString()))
+                    .plus( BigNumber(contributorAddress1sMVTAmount).mul(BigNumber(values[3][2].toString())) );
 
                 assert.equal(expectedreward.toString(), values[0].toString(), "claimed reward should be as expecting");
 
@@ -1792,10 +1792,10 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
-        var contributorAddress1sBNKAmount = BigNumber('532541');
+        var contributorAddress1sMVTAmount = BigNumber('532541');
         var contributorAmountBeforeWithdraw;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -1806,11 +1806,11 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -1841,7 +1841,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[4], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
@@ -1867,10 +1867,10 @@ contract('Claim reward tests', function (accounts) {
         var contractOwnerAddress;
         var contractAddress;
         var contributorAddress1 = accounts[8];
-        var contributorAddress1sBNKAmount = BigNumber('532541');
+        var contributorAddress1sMVTAmount = BigNumber('532541');
         var contributorAmountBeforeWithdraw;
 
-        return BankeraToken.new(blocksPerRound, startingRoundNumber)
+        return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -1881,11 +1881,11 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -1909,7 +1909,7 @@ contract('Claim reward tests', function (accounts) {
                 assert.isOk(values[1], "should be transaction");
 
                 return Promise.all([
-                    contractInstance.balanceOf(contractOwnerAddress) //contract owner BNK balance
+                    contractInstance.balanceOf(contractOwnerAddress) //contract owner MVT balance
                 ])
             })
             .then(function(values) {
@@ -2034,12 +2034,12 @@ contract('Claim reward tests', function (accounts) {
         var contractAddress;
         var contributorAddress1 = accounts[8];
         var contributorAddress2 = accounts[7];
-        var contributorAddress1sBNKAmount = BigNumber('5000000');
-        var contributorAddress2sBNKAmount = BigNumber('5000000');
+        var contributorAddress1sMVTAmount = BigNumber('5000000');
+        var contributorAddress2sMVTAmount = BigNumber('5000000');
         var customBlocksPerRound = 12;
         var customStartingRoundNumber = 10;
 
-        return BankeraToken.new(customBlocksPerRound, customStartingRoundNumber)
+        return MovementToken.new(customBlocksPerRound, customStartingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -2050,12 +2050,12 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress}),
-                    contractInstance.issueTokens(contributorAddress2, contributorAddress2sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress}),
+                    contractInstance.issueTokens(contributorAddress2, contributorAddress2sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -2102,11 +2102,11 @@ contract('Claim reward tests', function (accounts) {
         var contractAddress;
         var contributorAddress1 = accounts[8];
         var contributorAddress2 = accounts[7];
-        var contributorAddress1sBNKAmount = BigNumber('5000000');
-        var contributorAddress2sBNKAmount = BigNumber('5000000');
+        var contributorAddress1sMVTAmount = BigNumber('5000000');
+        var contributorAddress2sMVTAmount = BigNumber('5000000');
         var customBlocksPerRound = 12;
 
-        return BankeraToken.new(customBlocksPerRound, startingRoundNumber)
+        return MovementToken.new(customBlocksPerRound, startingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -2117,12 +2117,12 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress}),
-                    contractInstance.issueTokens(contributorAddress2, contributorAddress2sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress}),
+                    contractInstance.issueTokens(contributorAddress2, contributorAddress2sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -2165,12 +2165,12 @@ contract('Claim reward tests', function (accounts) {
         var contractAddress;
         var contributorAddress1 = accounts[8];
         var contributorAddress2 = accounts[7];
-        var contributorAddress1sBNKAmount = BigNumber('5000000');
-        var contributorAddress2sBNKAmount = BigNumber('5000000');
+        var contributorAddress1sMVTAmount = BigNumber('5000000');
+        var contributorAddress2sMVTAmount = BigNumber('5000000');
         var customBlocksPerRound = 12;
         var customStartingRoundNumber = 10;
 
-        return BankeraToken.new(customBlocksPerRound, customStartingRoundNumber)
+        return MovementToken.new(customBlocksPerRound, customStartingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -2181,12 +2181,12 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress}),
-                    contractInstance.issueTokens(contributorAddress2, contributorAddress2sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress}),
+                    contractInstance.issueTokens(contributorAddress2, contributorAddress2sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -2233,13 +2233,13 @@ contract('Claim reward tests', function (accounts) {
         var contractAddress;
         var contributorAddress1 = accounts[8];
         var contributorAddress2 = accounts[7];
-        var contributorAddress1sBNKAmount = BigNumber('5000000');
-        var contributorAddress2sBNKAmount = BigNumber('5000000');
+        var contributorAddress1sMVTAmount = BigNumber('5000000');
+        var contributorAddress2sMVTAmount = BigNumber('5000000');
         var contributorAmountBeforeWithdraw;
         var customBlocksPerRound = 12;
         var customStartingRoundNumber = 10;
 
-        return BankeraToken.new(customBlocksPerRound, customStartingRoundNumber)
+        return MovementToken.new(customBlocksPerRound, customStartingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -2250,12 +2250,12 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sBNKAmount.toFixed(0), {from: contractOwnerAddress}),
-                    contractInstance.issueTokens(contributorAddress2, contributorAddress2sBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contributorAddress1, contributorAddress1sMVTAmount.toFixed(0), {from: contractOwnerAddress}),
+                    contractInstance.issueTokens(contributorAddress2, contributorAddress2sMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
@@ -2312,11 +2312,11 @@ contract('Claim reward tests', function (accounts) {
         var contractInstance;
         var contractOwnerAddress;
         var contractAddress;
-        var contributorAddresssBNKAmount = BigNumber('5000000');
+        var contributorAddresssMVTAmount = BigNumber('5000000');
         var customBlocksPerRound = 12;
         var customStartingRoundNumber = 10;
 
-        return BankeraToken.new(customBlocksPerRound, customStartingRoundNumber)
+        return MovementToken.new(customBlocksPerRound, customStartingRoundNumber)
             .then(function (instance) {
                 contractInstance = instance;
                 contractOwnerAddress = accounts[0];
@@ -2327,11 +2327,11 @@ contract('Claim reward tests', function (accounts) {
                 ])
             })
             .then(function (values) {
-                assert.equal(values[0].toFixed(0), totalSupplyInsBNK.toFixed(0), "Incorrect totalSupply");
+                assert.equal(values[0].toFixed(0), totalSupplyInsMVT.toFixed(0), "Incorrect totalSupply");
 
                 return Promise.all([
                     //buy tokens for user
-                    contractInstance.issueTokens(contractOwnerAddress, contributorAddresssBNKAmount.toFixed(0), {from: contractOwnerAddress})
+                    contractInstance.issueTokens(contractOwnerAddress, contributorAddresssMVTAmount.toFixed(0), {from: contractOwnerAddress})
                 ])
             })
             .then(function(values) {
