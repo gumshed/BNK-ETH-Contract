@@ -2,7 +2,7 @@
 
 ## General Description
 
-The Contract has to have an Ethereum address in order to deposit a reward. Once the reward is set up for the weekly round, the claim amount will be proportionally divided among round token holders. For example, Jack, John and Bob have 1, 2 and 2 tokens respectively. If 100 ethers are placed in the round as a reward, Jack, John and Bob can claim 20, 40, 40 ethers respectively through the smart contract.
+The Contract has to have an Ethereum address in order to deposit a reward. Once the reward is deposited it is equally devided among all MVT addresses. Essentially a "Well" that The Movement can all benefit from. For example, Jack, John and Bob have 1, 2 and 2 tokens respectively. If 100 ethers are placed in the round as a reward, Jack, John and Bob can claim 20, 40, 40 ethers respectively through the smart contract.
 
 ## Testing
 Preparation:
