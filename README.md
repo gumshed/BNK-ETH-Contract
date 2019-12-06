@@ -1,4 +1,4 @@
-# The Movemnt ERC223 Contract
+# The Movement ERC223 Contract
 
 ## General Description
 
