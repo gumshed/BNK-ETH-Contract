@@ -22,7 +22,7 @@ contract('Paused contract functionality', function (accounts) {
     var contributorAddress1sMVTAmount = new BigNumber('15478545');
     var totalSupplyInsMVT = BigNumber('2500000000000000000');
 
-    it("10.0 " + "Deploy Bankera contract", function () {
+    it("10.0 " + "Deploy Movement contract", function () {
 
         return MovementToken.new(blocksPerRound, startingRoundNumber)
             .then(function (instance) {
