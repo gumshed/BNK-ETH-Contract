@@ -2,7 +2,7 @@
 
 ## A Quick Introduction 
 
-The Contract has to have an Ethereum address in order to deposit a reward. Once the reward is deposited it is equally devided among all MVT addresses. Essentially a "Well" that all of The Movement will benefit from. Future revenue efforts will point at this address to be distrubted to the community. For example, Jack, John and Bob have 1, 2 and 2 tokens respectively. If 100 ethers are placed in the round as a reward, Jack, John and Bob can claim 20, 40, 40 ethers respectively through the smart contract.
+The Contract has to have an Ethereum address in order to deposit a reward. Once the reward is deposited it is equally devided among all MVT addresses. Future revenue efforts will point at this address to be distrubted to the community. For example, Jack, John and Bob have 1, 2 and 2 tokens respectively. If 100 ethers are placed in the round as a reward, Jack, John and Bob can claim 20, 40, 40 ethers respectively through the smart contract.
 
 ## Testing
 Preparation:
