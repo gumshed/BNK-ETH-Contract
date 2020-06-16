@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity 0.4.18;
 
 import "./SafeMath.sol";
 /*
@@ -6,7 +6,7 @@ import "./SafeMath.sol";
  * see https://github.com/ethereum/EIPs/issues/20
  */
 contract ERC20 {
-
+ 
 	function totalSupply() public constant returns (uint256);
 	function balanceOf(address _owner) public constant returns (uint256);
 	function transfer(address _to, uint256 _value) public returns (bool success);
