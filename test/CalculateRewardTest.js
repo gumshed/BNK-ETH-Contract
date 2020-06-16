@@ -16,7 +16,7 @@ contract('Calculate reward tests', function (accounts) {
         setTimeout(done, 2500);
     });
 
-    var totalSupplyInsMVT = BigNumber('2500000000000000000');
+    var totalSupplyInsMVT = BigNumber('300000000000000');
     var blocksPerRound = BigNumber(50);
     var startingRoundNumber = BigNumber(0);
     var customStartingRoundNumber = BigNumber(30);
