@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.16;
 /**
  * Math operations with safety checks that throw on error
  */
