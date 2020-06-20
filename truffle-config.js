@@ -7,5 +7,15 @@ module.exports = {
             network_id: '*' // Match any network id
             
         }
-    }
+    },
+    compilers: {
+        solc: { 
+          settings: {0.4.18:
+            optimizer: {
+              enabled: true, // Default: false
+              runs: 200      // Default: 200
+            },
+          }
+        }
+      } 
 };
