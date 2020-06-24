@@ -1,5 +1,5 @@
 var SafeMath = artifacts.require('./SafeMath.sol');
-var MovementToken = artifacts.require('.MovementToken.sol');
+var MovementToken = artifacts.require('./MovementToken.sol');
 
 var ERC20DemoToken = artifacts.require('./helpers/ERC20Demo');
 var ERC20DemoCallBackToken = artifacts.require('./helpers/ERC20DemoCallBack');
