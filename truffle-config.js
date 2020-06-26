@@ -10,7 +10,7 @@ module.exports = {
     },
     compilers: {
         solc: {
-          Version: "0.4.18"
+          Version: "0.4.25"
             
             
         
