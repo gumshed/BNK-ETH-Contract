@@ -9,11 +9,9 @@ module.exports = {
         }
     },
     compilers: {
-        solc: {
-          Version: "0.4.25"
-            
-            
+      solc: {
+         version: "0.4.25", 
         
-        }
-      } 
+      }
+    }
 };
