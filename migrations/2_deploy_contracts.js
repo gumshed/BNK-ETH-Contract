@@ -9,6 +9,6 @@ module.exports = function (deployer) {
     deployer.deploy(MovementToken, 15, 0);
 
     //for test contracts
-    deployer.deploy(ERC20DemoToken, "0x8578a218d88f873b64db911a61844477b82f74f06b99b32e4d2187638db0a663");
-    deployer.deploy(ERC20DemoCallBackToken, "0x877c7588191e4ebe62a61a8417636f2ce02fa3c2709891ece42829928c79da69");
+    deployer.deploy(ERC20DemoToken, "");
+    deployer.deploy(ERC20DemoCallBackToken, "");
 };

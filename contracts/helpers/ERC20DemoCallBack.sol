@@ -9,7 +9,7 @@ contract ERC20DemoCallBack is StandardToken {
 	uint256   public totalSupply = 2000000000000;
 
 	function ERC20DemoCallBack(address owner) public {
-		totalSupply     = totalSupply;
+		totalSupply = totalSupply;
 		balances[owner] = totalSupply;
 	}
 
