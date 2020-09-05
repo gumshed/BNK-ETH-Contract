@@ -464,7 +464,7 @@ contract MovementToken is ERC223, SafeMath {
 	}
 
 	function createRounds(uint256 maxRounds) public {
-		uint256 blocksAfterLastRound = safeSub(block.number, lastBlockNumberInRound);	//current block number - last round block number = blocks after last round
+		uint256 blocksAfterLastRound = safeSub(block.number, lastBlockNumberInRound);
 
 		if(blocksAfterLastRound >= blocksPerRound){	// need to increase reward round if blocks after last round is greater or equal blocks per round
 

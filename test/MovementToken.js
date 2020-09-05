@@ -16,7 +16,7 @@ contract('MovementToken mixed tests', function (accounts) {
         setTimeout(done, 2500);
     });
 
-    var totalSupplyInsMVT = BigNumber('2500000000000000000');
+    var totalSupplyInsMVT = BigNumber('300000000000000');
     var blocksPerRound = 15;
     var startingRoundNumber = BigNumber(0);
 

@@ -16,7 +16,7 @@ contract('Total supply tests', function (accounts) {
         setTimeout(done, 2500);
     });
 
-    var totalSupplyInsMVT = BigNumber('3000000');
+    var totalSupplyInsMVT = BigNumber('3300000000000000');
     var blocksPerRound = 15;
     var startingRoundNumber = BigNumber(0);
 

@@ -20,7 +20,7 @@ contract('Paused contract functionality', function (accounts) {
 
     var contributorAddress1 = accounts[12];
     var contributorAddress1sMVTAmount = new BigNumber('15478545');
-    var totalSupplyInsMVT = BigNumber('2500000000000000000');
+    var totalSupplyInsMVT = BigNumber('300000000000000'); 
 
     it("10.0 " + "Deploy Movement contract", function () {
 
